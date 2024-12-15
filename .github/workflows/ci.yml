@@ -1,0 +1,42 @@
+name: Build and Tests with Coverage
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up C++ environment
+        uses: aminya/setup-cpp@v0.44.0
+        with:
+          compiler: 'gcc'
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential libmysqlclient-dev libssl-dev libgtest-dev lcov
+          cd /usr/src/googletest
+          sudo cmake CMakeLists.txt
+          sudo make
+          sudo make install
+
+      - name: Build and run tests with coverage
+        run: |
+          make clean
+          make
+          make test
+          make cov
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./build/coverage.info
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
