@@ -166,7 +166,8 @@ SELECT openssl_encrypt('aes-256-cbc', '12345678901234567890123456789012', 'Hello
 SELECT openssl_encrypt('aes-256-cbc', '12345678901234567890123456789012', 'Hello, World!', '1234567890123456');
 ```
 
-
+**Warning!**
+If you are not familiar with cryptographic practices, it is recommended to avoid using custom IVs. By default, the library will automatically generate a secure IV for you. Using custom IVs without proper knowledge can lead to security vulnerabilities. Please proceed with caution.
 
 ### `openssl_decrypt`
 
